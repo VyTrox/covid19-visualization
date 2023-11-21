@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly Data Visualization</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* CSS styling for chart components */
+        .axis-label {
+            font-size: 12px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            width: 200px;
+            /* Fixed width for the tooltip */
+            overflow: hidden;
+            /* Prevents content from making the box bigger */
+            white-space: nowrap;
+            /* Avoid text wrapping */
+        }
+
+
+        .tooltip-date {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .tooltip-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .tooltip-swatch {
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
+            display: block;
+        }
+
+        .tooltip-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .tooltip-value {
+            margin-left: auto;
+        }
+
+        .legend {
+            font-size: 12px;
+        }
+
+        #buttons {
+            display: flex;
+            /* Use flexbox to arrange buttons in a row */
+            justify-content: flex-start;
+            /* Align buttons to the start of the container (left) */
+            padding: 10px 0;
+            /* Padding at the top and bottom */
+            margin: 0;
+            /* Remove default margins */
+            gap: 0px;
+            /* Space between buttons */
+        }
+
+        .timeframe-btn {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            background-color: gray;
+            color: white;
+            cursor: pointer;
+        }
+
+        .timeframe-btn.active {
+            font-weight: bold;
+            background-color: white;
+            color: black;
+        }
+
+        .timeframe-btn:hover {
+            background-color: #e7e7e7;
+            /* Slightly darker grey on hover */
+            color: black;
+
+            /* Optional: change text color on hover */
+            #chart-title {
+                text-align: center;
+                color: #333;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 id="chart-title">Daily/Weekly/Monthly New Hospital Admissions by Age</h2>
+    <div id="buttons">
+        <button id="daily" class="timeframe-btn">Daily</button>
+        <button id="weekly" class="timeframe-btn active">Weekly</button>
+        <button id="monthly" class="timeframe-btn">Monthly</button>
+    </div>
+    <div id="chart"></div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
