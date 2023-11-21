@@ -1,3 +1,35 @@
+function updateReferenceLines(svg, y, width, levels, timeframe) {
+  levels.forEach((levelValue, i) => {
+    // Select the line, if it exists, and transition its position; if it doesn't exist, create it
+    let refLine = svg.select(`.ref-line-${i}`);
+    if (refLine.empty()) {
+      refLine = svg.append("line").attr("class", `ref-line-${i}`);
+    }
+
+    refLine.transition().duration(750)
+      .attr("x1", 0)
+      .attr("y1", y(levelValue))
+      .attr("x2", width)
+      .attr("y2", y(levelValue))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "5,5");
+
+    // Select the label, if it exists, and transition its position and content; if it doesn't exist, create it
+    let refText = svg.select(`.ref-text-${i}`);
+    if (refText.empty()) {
+      refText = svg.append("text").attr("class", `ref-text-${i}`);
+    }
+
+    refText.transition().duration(750)
+      .attr("x", width)
+      .attr("y", y(levelValue) - 5)
+      .attr("fill", "gray")
+      .attr("text-anchor", "end")
+      .text(`${levelValue.toLocaleString()} ${timeframe} admissions`);
+  });
+}
+
 async function updatechart(timeframe) {
   // First, remove the existing chart if it exists
   const chart = d3.select("#chart svg");
@@ -197,73 +229,21 @@ async function updatechart(timeframe) {
       .attr("y", 9)
       .text(ageGroupLabels[group]);
   });
-  // Define the admissions values for the reference lines
-  let level1, level2, level3;
-  if (timeframe === "monthly") {
-    level1 = 800000;
-    level2 = 100000;
-    level3 = 200000;
-  } else if (timeframe === "weekly") {
-    level1 = 50000;
-    level2 = 30000;
-    level3 = 10000;
-  } else {
-    level1 = 20000;
-    level2 = 10000;
-    level3 = 5000;
-  }
-  // Add level1 weekly admissions reference line
-  svg.append("line")
-    .attr("x1", 0)
-    .attr("y1", y(level1))
-    .attr("x2", width)
-    .attr("y2", y(level1))
-    .attr("stroke", "gray")
-    .attr("stroke-width", 1)
-    .attr("stroke-dasharray", "5,5"); // Makes the line dashed
-
-  // Add text label for 3000 weekly admissions line
-  svg.append("text")
-    .attr("x", width)
-    .attr("y", y(level1) - 5)
-    .attr("fill", "gray")
-    .attr("text-anchor", "end")
-    .text(`${level1.toLocaleString()} ${timeframe} admissions`);
-
-  // Add 1000 weekly admissions reference line
-  svg.append("line")
-    .attr("x1", 0)
-    .attr("y1", y(level2))
-    .attr("x2", width)
-    .attr("y2", y(level2))
-    .attr("stroke", "gray")
-    .attr("stroke-width", 1)
-    .attr("stroke-dasharray", "5,5"); // Makes the line dashed
-
-  // Add text label for 1000 weekly admissions line
-  svg.append("text")
-    .attr("x", width)
-    .attr("y", y(level2) - 5)
-    .attr("fill", "gray")
-    .attr("text-anchor", "end")
-    .text(`${level2.toLocaleString()} ${timeframe} admissions`);
-  svg.append("line")
-    .attr("x1", 0)
-    .attr("y1", y(level3))
-    .attr("x2", width)
-    .attr("y2", y(level3))
-    .attr("stroke", "gray")
-    .attr("stroke-width", 1)
-    .attr("stroke-dasharray", "5,5"); // Makes the line dashed
-
-  // Add text label for 1000 weekly admissions line
-  svg.append("text")
-    .attr("x", width)
-    .attr("y", y(level3) - 5)
-    .attr("fill", "gray")
-    .attr("text-anchor", "end")
-    .text(`${level3.toLocaleString()} ${timeframe} admissions`);
+// Define the admissions values for the reference lines based on the timeframe
+let levels;
+if (timeframe === "monthly") {
+  levels = [800000, 100000, 200000];
+} else if (timeframe === "weekly") {
+  levels = [50000, 30000, 10000];
+} else {
+  levels = [20000, 10000, 5000];
 }
+
+updateReferenceLines(svg, y, width, levels, timeframe);
+}
+
+
+
 function updateActiveButton(selectedTimeframe) {
   // Remove 'active' class from all buttons
   document.querySelectorAll('.timeframe-btn').forEach(btn => {
