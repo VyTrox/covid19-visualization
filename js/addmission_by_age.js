@@ -26,8 +26,8 @@ async function updatechart(timeframe) {
 
   // Define dimensions, margins and tooltip
   const margin = { top: 20, right: 30, bottom: 30, left: 50 },
-    width = 800 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
   const tooltip = d3.select("body").append("div").attr("class", "tooltip");
 
   // Create SVG element
