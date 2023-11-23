@@ -29,7 +29,10 @@
 </head>
 
 <body>
-    <h4 id="title" class="pt-3 pb-2">How were states in the US impacted by COVID-19?</h4>
+    <h1 id="title" class="pt-3 pb-2">How were states in the US impacted by COVID-19?</h1>
+    <h3 id="total-cases-title" class="graph-title">Cumulative Total Reported Cases</h3>
+    <div id="total-cases-line-graph"></div>
+
     <svg id='bubble'>
         <g id="bubble-legend"></g>
         <g id="band-legend"></g>
@@ -43,6 +46,7 @@
     <svg id='bar'>
         <g id="bar-legend"></g>
     </svg>
+    <script type='text/javascript' src='js/impact_on_each_state.js'></script>
+    <script type='text/javascript' src="js/total_cases.js"></script>
 </body>
 <link rel='stylesheet' href='styles.css'>
-<script type='text/javascript' src='js/impact_on_each_state.js'></script>
