@@ -7,14 +7,44 @@ const ctx = {
     marginLeft: 80
 };
 
+let cumulativeData = null;
+let dailyNewData = null;
+let showingCumulative = true;
+
+// Event listeners
+document.addEventListener("DOMContentLoaded", function () {
+    // createViz();
+    loadData();
+});
+
+// Event listener for the toggle button
+document.getElementById("toggleButton").addEventListener("click", function () {
+    showingCumulative = !showingCumulative;
+
+    // Update the title based on the current state
+    if (showingCumulative) {
+        document.getElementById("total-cases-title").textContent = "Cumulative Total Reported Cases";
+    } else {
+        document.getElementById("total-cases-title").textContent = "Daily New Reported Cases";
+    }
+
+    createViz();
+});
+
+
 function createViz() {
+    // Clear any existing SVG content
+    d3.select("#total-cases-line-graph").selectAll("*").remove();
+
     let svg = d3.select("#total-cases-line-graph").append("svg")
         .attr("width", ctx.w)
         .attr("height", ctx.h)
         .append("g")
         .attr("transform", `translate(${ctx.marginLeft},${ctx.marginTop})`);
     
-    loadData(svg);
+    // loadData(svg);
+    let data = showingCumulative ? cumulativeData : dailyNewData;
+    createLineGraph(data, svg);
 }
 
 function loadData(svg) {
@@ -31,19 +61,9 @@ function loadData(svg) {
     
     // Use Promise.all to execute all promises and then process the data
     Promise.all(promises).then(files => {
-        const parseDate = d3.timeParse("%Y-%m-%d");
-    
-        // Combine all files into a single dataset
-        const allData = files.flat();
-
-        // Aggregate cases by date
-        const aggregatedData = d3.rollups(allData, 
-                                        v => d3.sum(v, d => d.cases), 
-                                        d => d.date)
-                                .map(([date, cases]) => ({date: parseDate(date), cases}));
-
-        // Now you can create the line graph using aggregatedData
-        createLineGraph(aggregatedData, svg);
+        // Process and cache data
+        processData(files.flat());
+        createViz(); // Initial creation with cumulative data
 
     }).catch(error => {
         // Handle errors here
@@ -51,7 +71,25 @@ function loadData(svg) {
     });
 }
 
+
+function processData(allData) {
+    const parseDate = d3.timeParse("%Y-%m-%d");
+
+    // Process cumulative data
+    cumulativeData = d3.rollups(allData, 
+                                v => d3.sum(v, d => +d.cases), 
+                                d => d.date)
+                       .map(([date, cases]) => ({date: parseDate(date), cases}));
+
+    // Process daily data
+    dailyNewData = convertToDailyCases(cumulativeData);
+}
+
+
 function createLineGraph(data, svg) {
+    // Clear previous graph elements but keep the SVG container
+    svg.selectAll("*").remove();
+
     width = ctx.w - ctx.marginLeft - ctx.marginRight;
     height = ctx.h - ctx.marginTop - ctx.marginBottom;
 
@@ -110,13 +148,28 @@ function createLineGraph(data, svg) {
     .y(d => y(d.cases))
     .curve(d3.curveMonotoneX); // This will make the line smooth
 
-    // Add the line path using aggregatedData
-    svg.append("path")
-    .datum(aggregatedData) // Use the aggregated data here
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 2)
-    .attr("d", line);
+    // // Add the line path using aggregatedData
+    // svg.append("path")
+    // .datum(aggregatedData) // Use the aggregated data here
+    // .attr("fill", "none")
+    // .attr("stroke", "steelblue")
+    // .attr("stroke-width", 2)
+    // .attr("d", line);
+
+    // Update the line path
+    const linePath = svg.selectAll(".line-path")
+        .data([aggregatedData]);
+
+    linePath.enter()
+        .append("path")
+        .attr("class", "line-path")
+        .merge(linePath)
+        .transition()
+        .duration(750)
+        .attr("d", line)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 2);
 
     // Optionally, add an area beneath the line
     const area = d3.area()
@@ -130,6 +183,20 @@ function createLineGraph(data, svg) {
     .attr("fill", "steelblue")
     .attr("opacity", 0.3)
     .attr("d", area);
+
+    // Update the area path
+    const areaPath = svg.selectAll(".area-path")
+        .data([aggregatedData]);
+
+    areaPath.enter()
+        .append("path")
+        .attr("class", "area-path")
+        .merge(areaPath)
+        .transition()
+        .duration(750)
+        .attr("d", area)
+        .attr("fill", "steelblue")
+        .attr("opacity", 0.3);
 
     // Create a tooltip as a div
     const tooltip = d3.select("body").append("div")
@@ -201,6 +268,18 @@ function createLineGraph(data, svg) {
 
 }
 
+
+// Function to convert cumulative data to daily new cases
+function convertToDailyCases(data) {
+    let daily = [];
+    for (let i = 1; i < data.length; i++) {
+        let dailyCases = data[i].cases - data[i - 1].cases;
+        daily.push({ date: data[i].date, cases: dailyCases });
+    }
+    return daily;
+}
+
+
 // Aggregate cases by date
 function aggregateCases(data) {
     // Use d3.rollup to sum cases by date
@@ -208,8 +287,4 @@ function aggregateCases(data) {
     // Sort by date
     casesByDate.sort((a, b) => d3.ascending(a[0], b[0]));
     return casesByDate.map(([date, cases]) => ({ date, cases }));
-  }
-
-document.addEventListener("DOMContentLoaded", function () {
-    createViz()
-  });
+}
