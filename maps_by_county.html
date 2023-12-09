@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Visualization</title>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .counties {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 0.5;
+        stroke-linejoin: round;
+    }
+    .states {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 2;
+        stroke-linejoin: round;
+    }
+    .map-container {
+        position: relative; /* Position the thumbnail bar relative to this container */
+    }
+    .thumbnail-bar {
+        position: absolute; /* Absolute position will allow us to place it over the map */
+        left: 350px;
+        bottom: 660px; /* Adjust this value to move the bar up or down */
+        background-color: rgba(246, 246, 246, 0.8); /* Semi-transparent white background */
+        padding: 10px;
+        display: flex; /* Display thumbnails in a row */
+        gap: 1px; /* Add some space between thumbnails */
+        border-radius: 2px; /* Optional: rounded corners */
+    }
+    .thumbnail-bar img {
+        height: 92px; /* Set a fixed height for all thumbnails */
+        cursor: pointer; /* Change cursor to indicate clickable items */
+        opacity: 0.6; /* Thumbnails are slightly transparent by default */
+        transition: opacity 0.3s; /* Smooth transition for mouse-over effects */
+    }
+    .thumbnail-bar img:hover {
+        opacity: 1; /* Thumbnails are fully opaque when hovered */
+    }
+    #maps-title {
+        position: absolute; /* Position the title absolutely within .map-container */
+        top: 10px; /* Distance from the top of .map-container */
+        left: 3.4%; /* Center horizontally relative to .map-container */
+        z-index: 10; /* Ensure the title is above other elements */
+    }
+</style>
+</head>
+<body>
+
+<h2 id="maps-title">Maps</h2>
+  
+<div class="map-container">
+  <svg width="1200" height="800"></svg>
+  <!-- Thumbnail bar -->
+  <div class="thumbnail-bar">
+    <!-- Thumbnails as buttons to switch map modes -->
+    <img src="./img/img1.png" alt="Cases" title="Cases per capita">
+    <img src="./img/img1.png" alt="Deaths" title="Deaths per capita">
+    <img src="./img/img1.png" alt="Hospitalized" title="Hospitalized">
+    <img src="./img/img1.png" alt="Vaccinations" title="Vaccinations">
+    <!-- Add more thumbnails as needed -->
+  </div>
+</div>
+
+
+<script src="./js/maps_by_county.js"></script>
+
+</body>
+</html>
