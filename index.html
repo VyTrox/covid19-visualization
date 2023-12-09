@@ -31,9 +31,15 @@
 <body>
     <h1 id="title" class="pt-3 pb-2">How were states in the US impacted by COVID-19?</h1>
 
-    <button id="toggleButton">Toggle Daily/Cumulative Cases</button>
+    
     <h3 id="total-cases-title" class="graph-title">Cumulative Total Reported Cases</h3>
+    <button id="toggleButtonCases">Toggle Daily/Cumulative Cases</button>
     <div id="total-cases-line-graph"></div>
+
+    
+    <h3 id="total-deaths-title" class="graph-title">Cumulative Total Reported Deaths</h3>
+    <button id="toggleButtonDeaths">Toggle Daily/Cumulative Deaths</button>
+    <div id="total-deaths-line-graph"></div>
 
     <svg id='bubble'>
         <g id="bubble-legend"></g>
@@ -48,7 +54,8 @@
     <svg id='bar'>
         <g id="bar-legend"></g>
     </svg>
-    <script type='text/javascript' src='js/impact_on_each_state.js'></script>
-    <script type='text/javascript' src="js/total_cases.js"></script>
+    <script type='text/javascript' src='js/impact_on_each_state.js' defer></script>
+    <script type='text/javascript' src="js/total_cases.js" defer></script>
+    <script type='text/javascript' src="js/deaths.js" defer></script>
 </body>
 <link rel='stylesheet' href='styles.css'>

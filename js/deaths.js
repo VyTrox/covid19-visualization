@@ -1,54 +1,44 @@
-const ctx = {
-    w: document.getElementById('total-cases-line-graph').clientWidth - 100,
-    h: 500,
-    marginTop: 10, 
-    marginRight: 30, 
-    marginBottom: 80, 
-    marginLeft: 80
-};
-
-
-let cumulativeData = null;
-let dailyNewData = null;
-let showingCumulative = true;
+let cumulativeDataDeaths = null;
+let dailyNewDataDeaths = null;
+let showingCumulativeDeaths = true;
 
 // Event listeners
 document.addEventListener("DOMContentLoaded", function () {
-    // createViz();
-    loadData();
+    // createVizDeaths();
+    loadDataDeaths();
 });
 
 // Event listener for the toggle button
-document.getElementById("toggleButtonCases").addEventListener("click", function () {
-    showingCumulative = !showingCumulative;
+document.getElementById("toggleButtonDeaths").addEventListener("click", function () {
+    showingCumulativeDeaths = !showingCumulativeDeaths;
 
     // Update the title based on the current state
-    if (showingCumulative) {
-        document.getElementById("total-cases-title").textContent = "Cumulative Total Reported Cases";
+    if (showingCumulativeDeaths) {
+        document.getElementById("total-deaths-title").textContent = "Cumulative Total Reported Deaths";
     } else {
-        document.getElementById("total-cases-title").textContent = "Daily New Reported Cases";
+        document.getElementById("total-deaths-title").textContent = "Daily New Reported Deaths";
     }
 
-    createViz();
+    createVizDeaths();
 });
 
 
-function createViz() {
+function createVizDeaths() {
     // Clear any existing SVG content
-    d3.select("#total-cases-line-graph").selectAll("*").remove();
+    d3.select("#total-deaths-line-graph").selectAll("*").remove();
 
-    let svg = d3.select("#total-cases-line-graph").append("svg")
+    let svg = d3.select("#total-deaths-line-graph").append("svg")
         .attr("width", ctx.w)
         .attr("height", ctx.h)
         .append("g")
         .attr("transform", `translate(${ctx.marginLeft},${ctx.marginTop})`);
     
-    // loadData(svg);
-    let data = showingCumulative ? cumulativeData : dailyNewData;
-    createLineGraph(data, svg);
+    // loadDataDeaths(svg);
+    let data = showingCumulativeDeaths ? cumulativeDataDeaths : dailyNewDataDeaths;
+    createLineGraphDeaths(data, svg);
 }
 
-function loadData(svg) {
+function loadDataDeaths(svg) {
     // Define file paths for each CSV file
     const filepaths = [
         'data/us-counties-2020.csv',
@@ -63,8 +53,8 @@ function loadData(svg) {
     // Use Promise.all to execute all promises and then process the data
     Promise.all(promises).then(files => {
         // Process and cache data
-        processData(files.flat());
-        createViz(); // Initial creation with cumulative data
+        processDataDeaths(files.flat());
+        createVizDeaths(); // Initial creation with cumulative data
 
     }).catch(error => {
         // Handle errors here
@@ -73,35 +63,35 @@ function loadData(svg) {
 }
 
 
-function processData(allData) {
+function processDataDeaths(allData) {
     const parseDate = d3.timeParse("%Y-%m-%d");
 
     // Process cumulative data
-    cumulativeData = d3.rollups(allData, 
-                                v => d3.sum(v, d => +d.cases), 
-                                d => d.date)
-                       .map(([date, cases]) => ({date: parseDate(date), cases}));
+    cumulativeDataDeaths = d3.rollups(allData, 
+            v => d3.sum(v, d => +d.deaths > 0 ? +d.deaths : 0), 
+            d => d.date)
+    .map(([date, deaths]) => ({date: parseDate(date), deaths}));
 
     // Process daily data
-    dailyNewData = convertToDailyCases(cumulativeData);
+    dailyNewDataDeaths = convertToDailyDeaths(cumulativeDataDeaths);
 }
 
 
-function createLineGraph(data, svg) {
+function createLineGraphDeaths(data, svg) {
     // Clear previous graph elements but keep the SVG container
     svg.selectAll("*").remove();
 
     width = ctx.w - ctx.marginLeft - ctx.marginRight;
     height = ctx.h - ctx.marginTop - ctx.marginBottom;
 
-    const aggregatedData = aggregateCases(data);
+    const aggregatedData = aggregateDeaths(data);
 
     // Create scales
     const x = d3.scaleTime()
     .domain(d3.extent(data, d => d.date))
     .range([0, width]);
     const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.cases)])
+    .domain([0, d3.max(data, d => d.deaths)])
     .range([height, 0]);
 
     // Define the x-axis with a custom tick format
@@ -141,12 +131,12 @@ function createLineGraph(data, svg) {
        .attr("x", 0 - (height / 2))
        .attr("dy", "1em")
        .style("text-anchor", "middle")
-       .text("Number of Cases");
+       .text("Number of Deaths");
 
     // Define the line
     const line = d3.line()
     .x(d => x(d.date))
-    .y(d => y(d.cases))
+    .y(d => y(d.deaths))
     .curve(d3.curveMonotoneX); // This will make the line smooth
 
     // // Add the line path using aggregatedData
@@ -176,7 +166,7 @@ function createLineGraph(data, svg) {
     const area = d3.area()
     .x(d => x(d.date))
     .y0(height)
-    .y1(d => y(d.cases))
+    .y1(d => y(d.deaths))
     .curve(d3.curveMonotoneX);
 
     svg.append("path")
@@ -252,7 +242,7 @@ function createLineGraph(data, svg) {
 
         focusCircle
             .attr("cx", x(d.date))
-            .attr("cy", y(d.cases))
+            .attr("cy", y(d.deaths))
             .style("opacity", 1);
 
         focusLine
@@ -261,7 +251,7 @@ function createLineGraph(data, svg) {
             .style("opacity", 1);
 
         tooltip
-            .html("Date: " + d3.timeFormat("%b %d, %Y")(d.date) + "<br/>Cases: " + d3.format(",")(d.cases))
+            .html("Date: " + d3.timeFormat("%b %d, %Y")(d.date) + "<br/>Deaths: " + d3.format(",")(d.deaths))
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 10) + "px")
             .style("opacity", 1);
@@ -270,22 +260,22 @@ function createLineGraph(data, svg) {
 }
 
 
-// Function to convert cumulative data to daily new cases
-function convertToDailyCases(data) {
+// Function to convert cumulative data to daily new deaths
+function convertToDailyDeaths(data) {
     let daily = [];
     for (let i = 1; i < data.length; i++) {
-        let dailyCases = data[i].cases - data[i - 1].cases;
-        daily.push({ date: data[i].date, cases: dailyCases });
+        let dailyDeaths = data[i].deaths - data[i - 1].deaths;
+        daily.push({ date: data[i].date, deaths: dailyDeaths > 0 ? dailyDeaths : 0 });
     }
     return daily;
 }
 
 
-// Aggregate cases by date
-function aggregateCases(data) {
-    // Use d3.rollup to sum cases by date
-    const casesByDate = d3.rollups(data, v => d3.sum(v, leaf => leaf.cases), d => d.date);
+// Aggregate deaths by date
+function aggregateDeaths(data) {
+    // Use d3.rollup to sum deaths by date
+    const deathsByDate = d3.rollups(data, v => d3.sum(v, leaf => leaf.deaths), d => d.date);
     // Sort by date
-    casesByDate.sort((a, b) => d3.ascending(a[0], b[0]));
-    return casesByDate.map(([date, cases]) => ({ date, cases }));
+    deathsByDate.sort((a, b) => d3.ascending(a[0], b[0]));
+    return deathsByDate.map(([date, deaths]) => ({ date, deaths }));
 }
