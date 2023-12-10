@@ -17,3 +17,27 @@
     font-weight: 500;
     font-family:  sans-serif;
 }
+
+#total-cases-line-graph, #total-deaths-line-graph {
+    padding: 50px;
+    max-width: 100%;
+}
+
+#total-deaths-title, #total-cases-title {
+    margin-left: 50px;
+}
+
+#toggleButtonCases, #toggleButtonDeaths {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 5px;
+    margin-left: 50px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#toggleButtonCases:hover, #toggleButtonDeaths:hover {
+    background-color: #007bff;
+    transform: scale(1.05);
+}
+
