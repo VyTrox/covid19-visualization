@@ -162,7 +162,7 @@ function createLineGraphDeaths(data, svg) {
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2);
 
-    // Optionally, add an area beneath the line
+    // Add an area beneath the line
     const area = d3.area()
     .x(d => x(d.date))
     .y0(height)
