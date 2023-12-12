@@ -7,10 +7,13 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Kalnia" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&display=swap" rel="stylesheet">
+
 <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, sans-serif, 'Kalnia', 'Hedvig Letters Serif', serif;
     }
     .counties {
         fill: none;
@@ -29,22 +32,54 @@
     }
     .thumbnail-bar {
         position: absolute; /* Absolute position will allow us to place it over the map */
-        left: 350px;
-        bottom: 660px; /* Adjust this value to move the bar up or down */
+        left: 370px;
+        bottom: 670px; /* Adjust this value to move the bar up or down */
         background-color: rgba(246, 246, 246, 0.8); /* Semi-transparent white background */
-        padding: 10px;
+        padding: 0px;
         display: flex; /* Display thumbnails in a row */
-        gap: 1px; /* Add some space between thumbnails */
-        border-radius: 2px; /* Optional: rounded corners */
+        gap: -1px; /* Add some space between thumbnails */
+        border-radius: 2.5px; /* Optional: rounded corners */
+        border: 1.2px solid #ddd; /* 1px solid border with a light gray color */
     }
     .thumbnail-bar img {
         height: 92px; /* Set a fixed height for all thumbnails */
         cursor: pointer; /* Change cursor to indicate clickable items */
-        opacity: 0.6; /* Thumbnails are slightly transparent by default */
+        opacity: 0.2; /* Thumbnails are slightly transparent by default */
         transition: opacity 0.3s; /* Smooth transition for mouse-over effects */
+        border: 1px solid #ddd; /* 1px solid border with a light gray color */
     }
     .thumbnail-bar img:hover {
         opacity: 1; 
+    }
+    .thumbnail-bar img.active-thumbnail {
+        opacity: 1; 
+    }
+    .thumbnail-container {
+        position: relative; /* Set the thumbnail container to position relative */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .thumbnail-container img {
+        width: 100%; /* Set width to 100% to make the image fill the container */
+        cursor: pointer;
+    }
+    .thumbnail-label {
+        position: absolute; /* Absolute position to place it over the image */
+        bottom: 4px; /* Adjust as necessary to move text up or down */
+        left: 8%; /* Center horizontally */
+        color: #343434; /* Choose a text color that stands out on your images */
+        opacity: 0.2;
+        font-family: Arial;
+        font-weight: normal;
+        text-shadow: 2px 2px 4px #ffffff; /* White shadow with slight blur */
+        transition: opacity 0.1s, font-weight 0.1s;
+        pointer-events: none; /* Avoid text interfering with button functionality */
+        font-size: 13px;
+    }
+    .thumbnail-label.active {
+        opacity: 1; /* Active state opacity */
+        font-weight: bold;
     }
     #maps-title {
         position: absolute; /* Position the title absolutely within .map-container */
@@ -52,28 +87,55 @@
         left: 3.4%; /* Center horizontally relative to .map-container */
         z-index: 10; /* Ensure the title is above other elements */
     }
+    #tooltip {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        font-size: 14px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        pointer-events: none;
+    }
+
 </style>
 </head>
 <body>
 
-<h2 id="maps-title">Maps</h2>
+<!-- <h2 id="maps-title">Maps</h2> -->
   
 <div class="map-container">
   <svg width="1200" height="800"></svg>
   <!-- Thumbnail bar -->
   <div class="thumbnail-bar">
     <!-- Thumbnails as buttons to switch map modes -->
-    <img id="cases-btn" src="./img/cases.png" alt="Cases" title="Cases per capita">
-    <img id="deaths-btn" src="./img/deaths.png" alt="Deaths" title="Deaths per capita">    
-    <img id="vaccinations-btn" src="./img/vaccination.png" alt="Vaccinations" title="Vaccination">    
-    <img id="hospitalized-btn" src="./img/hospitalized.png" alt="hospitalized" title="Hospitalized">    
+    <div class="thumbnail-container">
+        <img id="cases-btn" src="./img/cases.png" alt="Cases" title="Cases per capita">
+        <span class="thumbnail-label">Cases per capita</span>
+    </div>
 
+    <div class="thumbnail-container">
+        <img id="deaths-btn" src="./img/deaths.png" alt="Deaths" title="Deaths per capita">
+        <span class="thumbnail-label">Deaths per capita</span>
+    </div>
+
+    <div class="thumbnail-container">
+        <img id="vaccinations-btn" src="./img/vaccination.png" alt="Vaccinations" title="Vaccination">    
+        <span class="thumbnail-label">Vaccinations</span>
+    </div>
+
+    <div class="thumbnail-container">
+        <img id="hospitalized-btn" src="./img/hospitalized.png" alt="hospitalized" title="Hospitalized">    
+        <span class="thumbnail-label">Hospitalized</span>
+    </div>
     <!-- Add more thumbnails as needed -->
   </div>
 </div>
 
 
 <script src="./js/maps_by_county.js"></script>
+<!-- <div id="tooltip" style="position: absolute; opacity: 0; pointer-events: none;"></div> -->
 
 </body>
 </html>
