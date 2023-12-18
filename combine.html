@@ -13,6 +13,11 @@
             display: block;
             margin: auto;
         }
+
+        iframe {
+            border: none; /* Remove border */
+            overflow: hidden; /* Hide scrollbars */
+        }
     </style>
     <!-- Other required styles and scripts -->
 </head>
@@ -20,7 +25,9 @@
     <h4 id="title" class="pt-3 pb-2">Data Visualization of COVID-19</h4>
     
     <!-- Embed visualization using D3 v6 -->
-    <iframe src="index.html" width="100%" height="800px"></iframe>
+    <div class="centered-iframe"></div>
+    <iframe src="index.html" width="100%" height="1000px"></iframe>
+    </div>
 
     <!-- Centered iframes -->
     <div class="centered-iframe">
