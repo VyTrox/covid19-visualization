@@ -7,38 +7,67 @@
         .centered-iframe {
             display: flex;
             justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px; /* Adds space between the iframes */
         }
 
-        .centered-iframe iframe {
-            display: block;
-            margin: auto;
+        .responsive-iframe {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 56.25%; /* Aspect ratio: 16:9 (56.25%) */
+        }
+
+        .responsive-iframe iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none; /* Removes border */
         }
 
         iframe {
             border: none; /* Remove border */
             overflow: hidden; /* Hide scrollbars */
         }
+
+        #title {
+            text-align: left;
+            font-weight: 100;
+            color: #333;
+            margin-left: 30px;
+            margin-bottom: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
     </style>
     <!-- Other required styles and scripts -->
 </head>
 <body>
-    <h4 id="title" class="pt-3 pb-2">Data Visualization of COVID-19</h4>
-    
     <!-- Embed visualization using D3 v6 -->
     <div class="centered-iframe"></div>
-    <iframe src="index.html" width="100%" height="1000px"></iframe>
+        <iframe src="index.html" width="100%" height="1000px"></iframe>
     </div>
 
-    <!-- Centered iframes -->
+    <!-- Centered iframes for other visualizations -->
     <div class="centered-iframe">
-        <!-- Embed visualization using D3 v4 -->
-        <iframe src="admission_by_age.html" width="50%" height="1000px"></iframe>
+        <div class="responsive-iframe">
+            <!-- Embed visualization using D3 v4 -->
+            <iframe src="admission_by_age.html"></iframe>
+        </div>
     </div>
     <div class="centered-iframe">
-        <!-- Embed visualization using D3 v7 -->
-        <iframe src="maps_by_county.html" width="50%" height="1000px"></iframe>
+        <div class="responsive-iframe">
+            <!-- Embed visualization using D3 v7 -->
+            <iframe src="maps_by_county.html"></iframe>
+        </div>
     </div>
 
     <!-- Other content and scripts -->
+    <h4 id="title" class="pt-3 pb-2">Data Visualization 2023 Project (INF552)</h4>
+    <h5 id="title" class="pt-3 pb-2">By Yuelin Hu, Alex Quanch, Yujia Cheng, Yuxin LIU</h4>
 </body>
 </html>

@@ -13,7 +13,7 @@ let colorCases = d3.scaleThreshold()
         "#F9C467", 
         "#FFA83D", 
         "#FF8B23", 
-        "#FC6A0C", 
+        "#FC6A0C",  
         "#F04F09", 
         "#D8382E", 
         "#AF1B43", 
