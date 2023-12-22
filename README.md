@@ -30,12 +30,16 @@ The datasets used for this visualization project come from the following sources
 
 For a comprehensive understanding of the project, methodologies, data sources, and in-depth analysis, please refer to our detailed project report named `DV_Report_231222.pdf`. The report offers a complete narrative of the project's objectives, data processing techniques, visualization strategies. If you want to know the dynamic interation of our project intuitively, please refer to the screen video named `Screen Recording Covid19.mov`.
 
+## Cloning the Repository
+
+To clone this repository and run the visualizations on your local machine, follow these steps:
+
+1. Open your terminal (Linux/macOS) or command prompt (Windows).
+2. Navigate to the directory where you want to clone the repository.
+3. Run the following command:
+   ```bash
+   git clone https://github.com/VyTrox/covid19-visualization.git
+
 ## Usage
 
 To view the project, open `combine.html` in a modern web browser. Ensure that all HTML files are in the same directory for proper linking and functionality.
-
-## Dependencies
-
-- D3.js (Data-Driven Documents)
-- Bootstrap for responsive design
-- Other dependencies are listed in the HTML files.
