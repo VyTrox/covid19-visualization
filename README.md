@@ -28,7 +28,7 @@ The datasets used for this visualization project come from the following sources
 
 ### Detailed Report
 
-For a comprehensive understanding of the project, methodologies, data sources, and in-depth analysis, please refer to our detailed project report. The report offers a complete narrative of the project's objectives, data processing techniques, visualization strategies, and key findings.
+For a comprehensive understanding of the project, methodologies, data sources, and in-depth analysis, please refer to our detailed project report named `DV_Report_231222.pdf`. The report offers a complete narrative of the project's objectives, data processing techniques, visualization strategies. If you want to know the dynamic interation of our project intuitively, please refer to the screen video named `Screen Recording Covid19.mov`.
 
 ## Usage
 
